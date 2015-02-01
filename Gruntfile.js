@@ -8,12 +8,13 @@ grunt.initConfig({
         moduleType: 'js'
       },
       files: {
-        'lib/grammar.js': 'lib/grammar.y'
+        'lang/**/grammar.js': 'lib/**/grammar.y'
       }
     }
   },
   jshint: {
-    all: ['Gruntfile.js', 'lib/**/*.js', '!lib/grammar.js']
+    all: ['Gruntfile.js', 'lib/**/*.js', 
+          'lang/**/*.js', '!lang/**/grammar.js']
   },
   mochaTest: {
     test: {
@@ -22,7 +23,8 @@ grunt.initConfig({
   },
   watch: {
     scripts: {
-      files: ['lib/**/*.js', 'lib/grammar.y', '!lib/grammar.js',
+      files: ['lib/**/*.js', 'lang/**/*.js', 
+              'lang/**/grammar.y', '!lang/**/grammar.js',
               'test/**/*.pass', 'test/**/*.fail'],
       tasks: ['default'],
       options: {
@@ -30,7 +32,7 @@ grunt.initConfig({
       },
     },
   },
-  clean: ['lib/grammar.js']
+  clean: ['lang/**/grammar.js']
 });
 
 grunt.loadNpmTasks('grunt-jison');
