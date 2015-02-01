@@ -3,13 +3,16 @@ module.exports = function(grunt) {
 
 grunt.initConfig({
   jison: {
-    target : {
+    grammar: {
       options: {
         moduleType: 'js'
       },
-      files: {
-        'lang/**/grammar.js': 'lib/**/grammar.y'
-      }
+      files: [{
+        exapnd: true,
+        cwd: 'lang/',
+        src: ['*.y'],
+        dest: 'lang/'
+      }]
     }
   },
   jshint: {
