@@ -28,8 +28,13 @@ pgm
   .parse(process.argv);
 
 if(pgm.list) {
-  _(lang.ls()).each(function(l) {
-    console.log('language: '+l);
+  console.log('Supported languages');
+  _(lang.ls()).each(function(name) {
+    console.log('  '+name);
+  });
+  console.log('Supported plugins');
+  _(plgn.ls()).each(function(name) {
+    console.log('  '+name);
   });
 } else {
 

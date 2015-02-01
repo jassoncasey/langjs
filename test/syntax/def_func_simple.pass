@@ -1,0 +1,12 @@
+def foo:() -> void = {
+  1;
+};
+
+def id:(x:int) -> int = {
+  return x;
+};
+
+def id:(T:: typename, x:T) -> T = {
+  return x;
+};
+

@@ -1,0 +1,7 @@
+def x: nat = 1;
+def y: bool = true;
+def z: char = 'c';
+def q: string = "you";
+
+def ip1: ipv4 = 1.2.3.4;
+def mac1: mac = 00:00:00:00:00:00;

@@ -1,0 +1,1 @@
+def uint::: (bits: nat, order: Order) -> typename;
