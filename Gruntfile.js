@@ -1,17 +1,22 @@
 
+var _ = require('underscore');
+var path = require('path');
+
 module.exports = function(grunt) {
 
 grunt.initConfig({
   jison: {
-    grammar: {
+    dist: {
       options: {
         moduleType: 'js'
       },
       files: [{
-        exapnd: true,
-        cwd: 'lang/',
-        src: ['*.y'],
-        dest: 'lang/'
+        expand: true,
+        src: 'lang/**/*.y',
+        rename: function(dest, src) {
+          return path.resolve(path.dirname(src), 
+                              path.basename(src, '.y') + '.js');
+        }
       }]
     }
   },
@@ -46,5 +51,17 @@ grunt.loadNpmTasks('grunt-contrib-watch');
 
 grunt.registerTask('default', ['jison', 'jshint', 'mochaTest']);
 grunt.registerTask('clear', ['clean']);
+
+grunt.registerMultiTask('test', 'asdfasdfsadf', function() {
+
+  _(this).each(function(value, key) {
+    console.log('%j = %j', key, value);
+  });
+  
+  this.files.forEach(function(f) {
+    console.log(f);
+  });
+
+});
 
 };
