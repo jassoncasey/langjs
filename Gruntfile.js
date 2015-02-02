@@ -1,5 +1,5 @@
 
-var _ = require('underscore');
+var _    = require('underscore');
 var path = require('path');
 
 module.exports = function(grunt) {
@@ -50,18 +50,6 @@ grunt.loadNpmTasks('grunt-contrib-clean');
 grunt.loadNpmTasks('grunt-contrib-watch');
 
 grunt.registerTask('default', ['jison', 'jshint', 'mochaTest']);
-grunt.registerTask('clear', ['clean']);
 
-grunt.registerMultiTask('test', 'asdfasdfsadf', function() {
-
-  _(this).each(function(value, key) {
-    console.log('%j = %j', key, value);
-  });
-  
-  this.files.forEach(function(f) {
-    console.log(f);
-  });
-
-});
 
 };
