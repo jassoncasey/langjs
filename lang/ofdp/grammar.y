@@ -34,7 +34,12 @@ var keywords = {
 "*" return "*"; 
 "(" return "(";
 ")" return ")";
+
 "/" return "/";
+"&" return "&";
+
+"{" return "{";
+"}" return "}";
 
 /* Catch the end of the file, otherwise return trash */
 <<EOF>>   return "EOF";
@@ -49,38 +54,55 @@ var keywords = {
 
 %%
 
-file: stmts EOF {
-} | EOF {
+file: cfgs EOF {
 };
 
-stmts: stmts stmt {
-} | stmt {
+cfgs: cfgs cfg {
+} | {
 };
 
-stmt: match_set;
+cfg: IDENT '{' mods '}' ;
 
-match_set: match_set ',' match
-         | match;
+mods: mods mod
+    | ;
 
-match: IDENT
-     | IDENT '(' ')'
-     | IDENT '(' match_fields ')';
+mod: flow;
 
-match_fields: match_fields ',' match_field
-            | match_field;
+flow: DIGITS '|' exprs 'RARROW' stmts;
 
-match_field: IDENT
-           | IDENT '=' classifier;
+stmts: stmts stmt
+     | ;
 
-classifier: '*'
-          | literal
-          | literal '/' literal
-          | literal literal;
+stmt: IDENT attrs ';';
+
+attrs: attrs exprs
+      | ;
+
+
+exprs: exprs ',' expr
+     | expr;
+
+expr: assign;
+    
+assign: IDENT '=' mask
+      | mask;
+
+mask: postfix '/' postfix
+    | postfix '&' postfix
+    | postfix;
+
+postfix: postfix '(' ')'
+       | postfix '(' exprs ')'
+       | primary;
+
+primary: IDENT
+       | literal;
 
 literal: HEX {
 } | DIGITS {
 } | MAC_ADDR {
 } | IPV4_ADDR {
+} | '*' {
 };
 
 %%
