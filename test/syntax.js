@@ -22,7 +22,7 @@ describe('Possitive and negative syntax testing', function() {
             // Expect test case to pass
             try {
               var p = new parser.Parser(grammar);
-              p.parse(src);
+              p.parse(src.text);
             } catch(e) {
               console.log(e);
               throw e;
