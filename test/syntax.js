@@ -33,7 +33,7 @@ describe('Possitive and negative syntax testing', function() {
             var src = new trans.Source(path.resolve(langdir, file));
             // Expect test case to fail
             var p = new parser.Parser(grammar);
-            expect(parser.parse.bind(parser, src)).to.throw();
+            expect(p.parse.bind(parser, src.text)).to.throw();
           });
         }
       });
