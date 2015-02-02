@@ -1,0 +1,5 @@
+def x:typename = record {
+  x:bool,
+  c:char,
+  y:uint(14)
+};

@@ -1,0 +1,7 @@
+
+def header: typename = record {
+  version: uint(8) | == 1,
+  type:    Type,
+  length:  uint(16, msbf) | >= 8,
+  xid:     uint(32, msbf)
+};

@@ -1,0 +1,3 @@
+def x:bool = true;
+def y:bool = false;
+def z:bool;

@@ -1,0 +1,1 @@
+def uint: alias = UInt(32);

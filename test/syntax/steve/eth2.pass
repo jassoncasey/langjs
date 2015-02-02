@@ -1,0 +1,1 @@
+def x:eth = 00:22:33:ff:aa:bb / 8;

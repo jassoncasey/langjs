@@ -1,0 +1,5 @@
+def x:typename = enum {
+  A = 1,
+  B = 2,
+  0..100
+};

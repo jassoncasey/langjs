@@ -1,0 +1,26 @@
+
+def Type: typename = enum(uint(8)) {
+  HELLO    = 0,
+  ERROR    = 1,
+  ECHO_REQ = 2,
+  ECHO_RES = 3,
+  VENDOR   = 4,
+  FEATURE_REQ = 5,
+  FEATURE_RES = 6,
+  GET_CONFIG_REQ = 7,
+  GET_CONFIG_RES = 8,
+  SET_CONFIG = 9,
+  PACKET_IN = 10,
+  FLOW_REMOVED = 11,
+  PORT_STATUS = 12,
+  PACKET_OUT = 13,
+  FLOW_MOD = 14,
+  PORT_MOD = 15,
+  STATS_REQ = 16,
+  STATS_RES = 17,
+  BARRIER_REQ = 18,
+  BARRIER_RES = 19,
+  QUEUE_GET_CONFIG_REQ = 20,
+  QUEUE_GET_CONFIG_RES = 21
+};
+

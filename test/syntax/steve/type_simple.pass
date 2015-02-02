@@ -1,0 +1,7 @@
+bool;
+uint;
+char;
+string;
+mac;
+ipv4;
+ipv6;

@@ -1,0 +1,4 @@
+def x:bool;
+def x:alias;
+def x:typename;
+

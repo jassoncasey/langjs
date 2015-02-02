@@ -1,0 +1,3 @@
+def z:uint = 0;
+def z:uint = 0x000;
+def z:uint;

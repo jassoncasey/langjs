@@ -1,0 +1,35 @@
+
+def bool::   typename;
+def char::   typename;
+def nat::    typename;
+def int::    typename;
+def string:: typename;
+
+def ByteOrder: enum { msbf, lsbf };
+
+def uint::: (bits: nat, order: ByteOrder) -> typename = uint(nat, order);
+
+def Pair::: (T1:: typename, T2:: typename) -> typename = record {
+  first: T1,
+  second: T2
+};
+
+def Pair.constructor:: (f: T1, f: T2) -> Pair(T1, T2) = {
+};
+
+def Header:: typename = record {
+  version: uint(8),
+  type: uint(8),
+  length: uint(16, msbf),
+  xid: uint(32, msbf)
+};
+
+def Header.constructor: (v: uint(8), t: uint(8), l: uint(16), 
+                         x: uint(32)) -> Header = {
+  this.version = v;
+  this.type    = t;
+  this.length  = l;
+  this.xid     = x;
+};
+
+

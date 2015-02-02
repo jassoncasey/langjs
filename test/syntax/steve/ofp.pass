@@ -1,0 +1,60 @@
+
+def Type: typename = enum(uint(8)) {
+  HELLO    = 0,
+  ERROR    = 1,
+  ECHO_REQ = 2,
+  ECHO_RES = 3,
+  VENDOR   = 4,
+  FEATURE_REQ = 5,
+  FEATURE_RES = 6,
+  GET_CONFIG_REQ = 7,
+  GET_CONFIG_RES = 8,
+  SET_CONFIG = 9,
+  PACKET_IN = 10,
+  FLOW_REMOVED = 11,
+  PORT_STATUS = 12,
+  PACKET_OUT = 13,
+  FLOW_MOD = 14,
+  PORT_MOD = 15,
+  STATS_REQ = 16,
+  STATS_RES = 17,
+  BARRIER_REQ = 18,
+  BARRIER_RES = 19,
+  QUEUE_GET_CONFIG_REQ = 20,
+  QUEUE_GET_CONFIG_RES = 21
+};
+
+def Hello:typename = record {};
+
+def Error: typename = record {
+  type: uint(16, msbf),
+  code: uint(16, msbf)
+};
+
+def Echo_req: typename = Hello;
+def Echo_res: typename = Hello;
+
+def Vendor: typename = record {
+  vendor_id: uint(32, msbf)
+};
+
+def Payload: (type:Type) -> typename = variant {
+  Hello    if type == Type.HELLO, 
+  Error    if type == Type.ERROR,
+  Echo_req if type == Type.ECHO_REQ,
+  Echo_res if type == Type.ECHO_RES,
+  Vendor   if type == Type.VENDOR
+};
+
+def Header: typename = record {
+  version: uint(8) | == 1,
+  type:    Type,
+  length:  uint(16, msbf) | >= 8,
+  xid:     uint(32, msbf)
+};
+
+def Payload: typename = record {
+  header: Header,
+  payload: constrain(Payload(header.type), header.length - 8)
+};
+

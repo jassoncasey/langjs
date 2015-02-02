@@ -1,0 +1,13 @@
+def x:string = "asdfasdfsa";
+
+def x:string = "";
+
+def x:string = "
+
+
+asdf
+asdf
+asdf
+sadf
+";
+

@@ -1,0 +1,5 @@
+def z:uint = x;
+def z:uint = x.x;
+
+def y: alias = bool;
+def z: typename = uint;
