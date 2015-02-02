@@ -1,0 +1,15 @@
+
+learn {
+  10| eth(src=00:00:00:00:00:00) ->
+    drop;
+
+  0|* -> 
+    apply output(CONTROLLER);
+    metadata 1 2;
+    goto forward;
+}
+
+forward {
+  0|* ->
+    write output(ALL);
+}

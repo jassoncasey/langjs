@@ -31,6 +31,7 @@ var keywords = {
 "->" return "RARROW";
 "=" return "=";
 ";" return ";";
+"|" return "|";
 "*" return "*"; 
 "(" return "(";
 ")" return ")";
