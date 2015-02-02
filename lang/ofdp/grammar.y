@@ -1,18 +1,11 @@
 
 %lex
 
-hex     0x[0-9a-fA-F]+
-digits  [0-9]+
-ident   [a-zA-Z_][a-zA-Z_0-9]*
-
 %{
 var _ = require('underscore');
+
 var keywords = {
   /* Environment manipulation operations */
-  'def':      'DEF',
-  'while':    'WHILE',
-  'if':       'IF',
-  'return':   'RETURN'
 };
 %}
 
@@ -29,11 +22,6 @@ var keywords = {
 0x[0-9a-fA-F]+          return "HEX";
 [0-9]+                  return "DIGITS";
 
-/* Handle character literals */
-\'[^\']\'   return "CHAR";
-\"[^\"]+\"  return "STRING";
-\"\"        return "STRING";
-
 /* Handle identifiers, upconvert any keywords */
 [a-zA-Z_][a-zA-Z_0-9]* {
   if(_(keywords).has(yytext)) { return keywords[yytext]; }
@@ -41,53 +29,12 @@ var keywords = {
 }
 
 "->" return "RARROW";
-".." return "DOTDOT";
-":::" return ":::";
-"::" return "::";
-
-"&&" return "LAND";
-"||" return "LOR";
-
-"==" return "EQ";
-"!=" return "NEQ"
-
-"<=" return "<=";
-">=" return ">=";
-
-"<<" return "<<";
-">>" return ">>";
-
-"." return ".";
 "=" return "=";
-"," return ",";
-":" return ":";
 ";" return ";";
-"?" return "?";
-
+"*" return "*"; 
 "(" return "(";
 ")" return ")";
-"[" return "[";
-"]" return "]";
-"{" return "{";
-"}" return "}";
-
-"!" return "!";
-"~" return "~";
-"&" return "&";
-"|" return "|";
-"^" return "^";
-
-"<" return "<";
-">" return ">";
-
-"+" return "+";
-"-" return "-";
-
-"*" return "*";
 "/" return "/";
-"%" return "%";
-
-"\\" return "SLASH";
 
 /* Catch the end of the file, otherwise return trash */
 <<EOF>>   return "EOF";
@@ -110,54 +57,28 @@ stmts: stmts stmt {
 } | stmt {
 };
 
-stmt: expr ';' {
-};
+stmt: match_set;
 
-exprs_comma: exprs_comma ',' expr {
-} | expr {
-};
+match_set: match_set ',' match
+         | match;
 
-expr: def
-    | block
-    | ret;
+match: IDENT
+     | IDENT '(' ')'
+     | IDENT '(' match_fields ')';
 
-def: 'DEF' decl {
-} | 'DEF' decl '=' expr {
-} |  decl {
-};
+match_fields: match_fields ',' match_field
+            | match_field;
 
-block: '{' '}' {
-} | '{' stmts '}' {
-};
+match_field: IDENT
+           | IDENT '=' classifier;
 
-ret: 'RETURN' expr {
-};
-
-decl: decl ':' arrow {
-} | decl '::' arrow {
-} | decl ':::' arrow {
-} | arrow {
-};
-
-arrow: primary 'RARROW' postfix {
-} | postfix {
-};
-
-postfix: postfix '(' ')' {
-} | postfix '(' exprs_comma ')' {
-} | primary {
-};
-
-primary: IDENT {
-} | literal {
-} | '(' ')' {
-} | '(' exprs_comma ')' {
-};
+classifier: '*'
+          | literal
+          | literal '/' literal
+          | literal literal;
 
 literal: HEX {
 } | DIGITS {
-} | CHAR {
-} | STRING {
 } | MAC_ADDR {
 } | IPV4_ADDR {
 };
