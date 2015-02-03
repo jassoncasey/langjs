@@ -4,6 +4,7 @@
 var _ = require('underscore');
 
 function Visitor() {}
+function S
 
 function Constant(name, value) {
   this.name  = name;
@@ -24,7 +25,15 @@ SimpleType.prototype.accept = function(v) {
   v.simpleType(this);
 };
 
-Visitor.prototype.simpletype = function(expr) {};
+Visitor.prototype.simpleType = function(expr) {};
+
+var BOOL = new SimpleType('bool');
+var NAT = new SimpleType('nat');
+var INT = new SimpleType('int');
+var CHAR = new SimpleType('char');
+var STRING = new SimpleType('string');
+var IPV4  = new SimpleType('ipv4');
+var MAC   = new SimpleType('mac');
 
 function ArrowType(argTypes, retType) {
   this.argTypes = argTypes;
@@ -36,6 +45,20 @@ ArrowType.prototype.accept = function(v) {
 };
 
 Visitor.prototype.arrowType = function(expr) {};
+
+function equalTypes(lhs, rhs) {
+  if(lhs instanceof SimpleType && rhs instanceof SimpleType) {
+    return lhs.name === rhs.name;
+  } else if(lhs instanceof ArrowType && rhs instanceof ArrowType) {
+    if(lhs.argTypes.size() !=== rhs.argTypes.size()) {
+      return false;
+    } else {
+      for(var i=0; 
+    }
+    return equalTypes(lhs.retType, rhs.retType);
+  }
+  return false;
+}
 
 function Variable(id) {
   this.id = id;
@@ -214,6 +237,16 @@ Call.prototype.accept = function(v) {
 
 Visitor.prototype.call = function(expr) {
   expr.params.accept(this);
+};
+
+exports.Builtins = {
+  BOOL:   new SimpleType('bool'),
+  NAT:    new SimpleType('nat'),
+  INT:    new SimpleType('int'),
+  CHAR:   new SimpleType('char'),
+  STRING: new SimpleType('string'),
+  IPV4:   new SimpleType('ipv4'),
+  MAC:    new SimpleType('mac')
 };
 
 exports.Constant    = Constant;
