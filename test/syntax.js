@@ -17,7 +17,7 @@ describe('Possitive and negative syntax testing', function() {
       _(fs.readdirSync(langdir)).each(function(file) {
         var ext = path.extname(file);
         if(ext === '.pass') {
-          it('Positive syntax test case: ' + file, function() {
+          it(lang + ': Positive syntax test case: ' + file, function() {
             var src = new trans.Source(path.resolve(langdir, file));
             // Expect test case to pass
             try {
@@ -29,7 +29,7 @@ describe('Possitive and negative syntax testing', function() {
             }
           });
         } else if(ext === '.fail') {
-          it('Negative syntax test case: ' + file, function() {
+          it(lang + ': Negative syntax test case: ' + file, function() {
             var src = new trans.Source(path.resolve(langdir, file));
             // Expect test case to fail
             var p = new parser.Parser(grammar);
