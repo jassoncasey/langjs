@@ -31,9 +31,19 @@ function Seq(expr) {
   }
 }
 
+Seq.prototype.push = function(expr) {
+  this.exprs.push(expr);
+};
+
 function BindTerm(name, type) {
   this.name = name;
   this.type = type;
+}
+
+function BindType(name, kind) {
+}
+
+function BindKind(name, kind) {
 }
 
 function Store(name, expr) {
@@ -77,14 +87,21 @@ function Call(name, params) {
   this.params = params ? params : new Seq();
 }
 
+exports.Constant    = Constant;
+exports.Variable    = Variable;
+exports.SimpleType  = SimpleType;
+exports.ArrowType   = ArrowType;
 exports.Seq         = Seq;
 exports.BindTerm    = BindTerm;
+exports.BindType    = BindType;
+exports.BindKind    = BindKind;
 exports.Store       = Store;
 exports.Conditional = Conditional;
 exports.While       = While;
 exports.Return      = Return;
 exports.Unary       = Unary;
 exports.Binary      = Binary;
+exports.Func        = Func;
 exports.Call        = Call;
 
 })();
