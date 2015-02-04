@@ -1,6 +1,7 @@
 (function() {
   'use strict';
 
+var _ = require('underscore');
 var fmt = require('../../lib/formatter');
 
 function Visitor() {
@@ -38,7 +39,7 @@ Visitor.prototype.seq = function(ir) {
   _(ir.exprs).each(function(expr) {
     expr.accept(this);
     this.f.writeln(';');
-  });
+  }, this);
 };
 
 Visitor.prototype.bindTerm = function(ir) {
@@ -132,7 +133,7 @@ Visitor.prototype.toString = function() {
 };
 
 function toString(ir) {
-  Visitor v = new Visitor();
+  var v = new Visitor();
   ir.accept(v);
   return v.toString();
 }
