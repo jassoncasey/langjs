@@ -21,16 +21,14 @@ Visitor.prototype.simpleType = function(ir) {
 };
 
 Visitor.prototype.arrowType = function(ir) {
-  var arg;
+  var idx;
   var first = true;
   this.f.write('(');
   this.f.beginSet();
-  for(arg in ir.argTypes) {
+  for(idx=0; idx<ir.argTypes.length; ++idx) {
     if(first) { first = false; }
     else      { this.f.write(', '); }
-    console.log('a: %j', arg);
-    arg.accept(this);
-    console.log('b');
+    ir.argTypes[idx].accept(this);
   }
   this.f.endSet();
   this.f.write(') -> ');
@@ -45,22 +43,24 @@ Visitor.prototype.seq = function(ir) {
 };
 
 Visitor.prototype.bindTerm = function(ir) {
-  this.f.write(ir.name + ': ');
+  ir.name.accept(this);
+  this.f.write(': ');
   ir.type.accept(this);
 };
 
 Visitor.prototype.bindType = function(ir) {
-  this.f.write(ir.name + ':: ');
+  ir.name.accept(this);
+  this.f.write(':: ');
   ir.kind.accept(this);
 };
 
 Visitor.prototype.bindKind = function(ir) {
-  this.f.write(ir.name + '::: ');
+  ir.name.accept(this);
+  this.f.write('::: ');
   ir.kind.accept(this);
 };
 
 Visitor.prototype.store = function(ir) {
-  console.log('note: %j', ir);
   ir.name.accept(this);
   this.f.write(' = ');
   ir.expr.accept(this);

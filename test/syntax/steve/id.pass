@@ -1,4 +1,4 @@
-def id:(x:int) -> int = {
+def id: (x: int) -> int = {
   return x;
 };
 

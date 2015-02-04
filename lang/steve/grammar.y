@@ -106,17 +106,17 @@ program: stmts EOF {
 };
 
 stmts: stmts stmt {
-      $1.push($2);
-      $$ = $1;
-     } | {
-      $$ = new ir.Seq();
-     };
+  $1.push($2);
+  $$ = $1;
+} | {
+  $$ = new ir.Seq();
+};
 
 stmt: expr ';' {
-      $$ = $1;
-    } | def ';' {
-      $$ = $1;
-    };
+  $$ = $1;
+} | def ';' {
+  $$ = $1;
+};
 
 def: 'DEF' bind {
   $$ = $2;
@@ -124,7 +124,7 @@ def: 'DEF' bind {
   $$ = new ir.Store($2, $4);
 };
 
-expr: lor_expr
+expr: lor
     | assign
     | block
     | while_
@@ -252,7 +252,7 @@ mult: mult '*' unary {
 
 unary: unary_op unary {
   $$ = new ir.Unary($1, $2);
-} | postfix {
+} | arrow {
   $$ = $1;
 };
 
@@ -268,11 +268,11 @@ arrow: bind RARROW arrow {
   $$ = $1;
 };
 
-bind: postfix ':' bind {
+bind: postfix ':' arrow {
   $$ = new ir.BindTerm($1, $3);
-} | postfix '::' bind {
+} | postfix '::' arrow {
   $$ = new ir.BindType($1, $3);
-} | postfix ':::' bind {
+} | postfix ':::' arrow {
   $$ = new ir.BindKind($1, $3);
 } | postfix {
   $$ = $1;
