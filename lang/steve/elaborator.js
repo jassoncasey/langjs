@@ -1,18 +1,18 @@
 (function() {
   'use strict';
 
-var syn = require('./syntax');
+var ir = require('./ir');
 var env = require('./environment');
 
 function Elaboration(stack, expr) {
-  syn.Visitor.call(this);
+  ir.Visitor.call(this);
 
   this.stack = stack;
   this.expr  = expr;
   this.type  = null;
 }
 
-Elaboration.prototype = Object.create(syn.Visitor.prototype);
+Elaboration.prototype = Object.create(ir.Visitor.prototype);
 Elaboration.prototype.constructor = Elaboration;
 
 Elaboration.prototype.toString = function() {
@@ -20,7 +20,7 @@ Elaboration.prototype.toString = function() {
 };
 
 Elaboration.prototype.constant = function() {
-  this.type = new syn.SimpleType(this.expr.name);
+  this.type = new ir.SimpleType(this.expr.name);
 };
 
 Elaboration.prototype.simpleType = function() {
@@ -72,7 +72,7 @@ Elaboration.prototype.conditional = function() {
   if(elaborate(this.env, this.expr.pred).type !== BOOL) {}
   var thenElab = elaborate(this.env, this.expr.thenExpr);
   var elseElab = elaborate(this.env, this.expr.elseExpr);
-  if(!syn.equalTypes(thenElab.type, elseElab.type)) {}
+  if(!ir.equalTypes(thenElab.type, elseElab.type)) {}
   this.type = thenElab.type;
 };
 

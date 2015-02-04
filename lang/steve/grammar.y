@@ -96,7 +96,7 @@ var keywords = {
 %start program
 
 %{
-var syn = require('./syntax');
+var ir = require('./ir');
 %}
 
 %%
@@ -109,7 +109,7 @@ stmts: stmts stmt {
       $1.push($2);
       $$ = $1;
      } | {
-      $$ = new syn.Seq();
+      $$ = new ir.Seq();
      };
 
 stmt: expr ';' {
@@ -121,7 +121,7 @@ stmt: expr ';' {
 def: 'DEF' decl_expr {
   $$ = $2;
 } | 'DEF' decl_expr '=' expr {
-  $$ = new syn.Store($2, $4);
+  $$ = new ir.Store($2, $4);
 };
 
 expr: lor_expr
@@ -135,21 +135,21 @@ exprs: exprs ',' expr {
   $1.push($3);
   $$ = $1;
 } | expr {
-  $$ = new syn.Seq($1);
+  $$ = [];
 };
 
 assign: decl_expr '=' expr {
-  $$ = new syn.Store($1, $3);
+  $$ = new ir.Store($1, $3);
 };
 
 while_expr: WHILE '(' expr ')' block {
-  $$ = new syn.While($3, $5);
+  $$ = new ir.While($3, $5);
 };
 
 if_expr: IF '(' expr ')' stmt {
-  $$ = new syn.Conditional($3, $5, null);
+  $$ = new ir.Conditional($3, $5, null);
 } | IF '(' expr ')' stmt ELSE stmt {
-  $$ = new syn.Conditional($3, $5, $7);
+  $$ = new ir.Conditional($3, $5, $7);
 };
 
 block: '{' stmts '}' {
@@ -157,153 +157,153 @@ block: '{' stmts '}' {
 };
 
 return_expr: RETURN expr {
-  $$ = new syn.Return($2);
+  $$ = new ir.Return($2);
 };
 
 lor_expr: lor_expr IF land_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | lor_expr LOR land_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | land_expr {
   $$ = $1;
 };
 
 land_expr: land_expr LAND decl_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | decl_expr {
   $$ = $1;
 };
 
 or_expr: or_expr '|' xor_expr {
-  $$ = new syn.Binary($2, $1, $3);     
+  $$ = new ir.Binary($2, $1, $3);     
 } | xor_expr {
   $$ = $1;
 };
 
 xor_expr: xor_expr '^' and_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | and_expr {
   $$ = $1;
 };
 
 and_expr: and_expr '&' eq_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | eq_expr {
   $$ = $1;
 };
 
 eq_expr: EQ rel_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | NEQ rel_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | eq_expr EQ rel_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | eq_expr NEQ rel_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | rel_expr {
   $$ = $1;
 };
 
 rel_expr: '<' shift_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | '>' shift_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | '<=' shift_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | '>=' shift_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | rel_expr '<' shift_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | rel_expr '>' shift_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | rel_expr '<=' shift_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | rel_expr '>=' shift_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | shift_expr {
   $$ = $1;
 };
 
 shift_expr: shift_expr '<<' add_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | shift_expr '>>' add_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | add_expr {
   $$ = $1;
 };
 
 add_expr: add_expr '+' mult_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | add_expr '-' mult_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | mult_expr {
   $$ = $1;
 }; 
 
 mult_expr: mult_expr '*' unary_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | mult_expr '/' unary_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | mult_expr '%' unary_expr {
-  $$ = new syn.Binary($2, $1, $3);
+  $$ = new ir.Binary($2, $1, $3);
 } | unary_expr {
   $$ = $1;
 };
 
 unary_expr: unary_op unary_expr {
-  $$ = new syn.Unary($1, $2);
+  $$ = new ir.Unary($1, $2);
 } | postfix_expr {
   $$ = $1;
 };
 
 unary_op: '~' {
-  $$ = syn.TILDE;
+  $$ = $1;
 } | '!' {
-  $$ = syn.BANG;     
+  $$ = $1;
 };
 
 decl_expr: decl_expr ':' or_expr {
-  $$ = new syn.BindTerm($1, $3);
+  $$ = new ir.BindTerm($1, $3);
 } | decl_expr '::' or_expr {
-  $$ = new syn.BindType($1, $3);
+  $$ = new ir.BindType($1, $3);
 } | decl_expr ':::' or_expr {
-  $$ = new syn.BindKind($1, $3);
+  $$ = new ir.BindKind($1, $3);
 } | decl_expr RARROW or_expr {
-  $$ = new syn.ArrowType($1, $3);
+  $$ = new ir.ArrowType($1, $3);
 } | or_expr {
   $$ = $1;
 };
 
 postfix_expr: postfix_expr '(' ')' {
-  $$ = new syn.Call($1, null);
+  $$ = new ir.Call($1, null);
 } | postfix_expr '(' exprs ')' {
-  $$ = new syn.Call($1, $3);
+  $$ = new ir.Call($1, $3);
 } | primary_expr {
   $$ = $1;
 };
 
 primary_expr: IDENT {
-  $$ = new syn.Variable(yytext);
+  $$ = new ir.Variable(yytext);
 } | literal {
   $$ = $1; 
 } | '(' exprs ')' {
   $$ = $1;
 } | '(' ')' {
-  $$ = new syn.Seq();
+  $$ = [];
 };
     
 literal: HEX {
-  $$ = new syn.Constant('nat', yytext);
+  $$ = new ir.Constant('nat', yytext);
 } | DIGITS {
-  $$ = new syn.Constant('nat', yytext);
+  $$ = new ir.Constant('nat', yytext);
 } | CHAR {
-  $$ = new syn.Constant('char', yytext);
+  $$ = new ir.Constant('char', yytext);
 } | STRING {
-  $$ = new syn.Constant('string', yytext);
+  $$ = new ir.Constant('string', yytext);
 } | MAC_ADDR {
-  $$ = new syn.Constant('mac', yytext);
+  $$ = new ir.Constant('mac', yytext);
 } | IPV4_ADDR {
-  $$ = new syn.Constant('ipv4', yytext);
+  $$ = new ir.Constant('ipv4', yytext);
 };
 
 %%

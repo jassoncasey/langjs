@@ -10,7 +10,7 @@ Scope.prototype.lookup = function(symbol) {
 };
 
 Scope.prototype.isFree = function(symbol) {
-  return !_(this.env}.has(symbol);
+  return !_(this.env).has(symbol);
 };
 
 Scope.prototype.bind = function(symbol, obj) {
