@@ -28,7 +28,9 @@ Visitor.prototype.arrowType = function(ir) {
   for(arg in ir.argTypes) {
     if(first) { first = false; }
     else      { this.f.write(', '); }
+    console.log('a: %j', arg);
     arg.accept(this);
+    console.log('b');
   }
   this.f.endSet();
   this.f.write(') -> ');
@@ -58,7 +60,8 @@ Visitor.prototype.bindKind = function(ir) {
 };
 
 Visitor.prototype.store = function(ir) {
-  this.f.write(ir.name);
+  console.log('note: %j', ir);
+  ir.name.accept(this);
   this.f.write(' = ');
   ir.expr.accept(this);
 };

@@ -126,6 +126,7 @@ Store.prototype.accept = function(v) {
 };
 
 Visitor.prototype.store = function(store) {
+  store.name.accept(this);
   store.expr.accept(this);
 };
 
@@ -142,7 +143,9 @@ Conditional.prototype.accept = function(v) {
 Visitor.prototype.conditional = function(conditional) {
   conditional.pred.accept(this);
   conditional.thenExpr.accept(this);
-  conditional.elseExpr.accept(this);
+  if(conditional.elseExpr) {
+    conditional.elseExpr.accept(this);
+  }
 };
 
 function While(pred, body) {

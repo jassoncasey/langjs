@@ -118,9 +118,9 @@ stmt: expr ';' {
       $$ = $1;
     };
 
-def: 'DEF' decl_expr {
+def: 'DEF' arrow_expr {
   $$ = $2;
-} | 'DEF' decl_expr '=' expr {
+} | 'DEF' arrow_expr '=' expr {
   $$ = new ir.Store($2, $4);
 };
 
@@ -135,10 +135,10 @@ exprs: exprs ',' expr {
   $1.push($3);
   $$ = $1;
 } | expr {
-  $$ = [];
+  $$ = [$1];
 };
 
-assign: decl_expr '=' expr {
+assign: arrow_expr '=' expr {
   $$ = new ir.Store($1, $3);
 };
 
@@ -168,9 +168,9 @@ lor_expr: lor_expr IF land_expr {
   $$ = $1;
 };
 
-land_expr: land_expr LAND decl_expr {
+land_expr: land_expr LAND or_expr {
   $$ = new ir.Binary($2, $1, $3);
-} | decl_expr {
+} | or_expr {
   $$ = $1;
 };
 
@@ -262,20 +262,24 @@ unary_op: '~' {
   $$ = $1;
 };
 
+arrow_expr: decl_expr RARROW arrow_expr {
+  $$ = new ir.ArrowType($1, $3);
+} | decl_expr {
+  $$ = $1;
+};
+
 decl_expr: decl_expr ':' or_expr {
   $$ = new ir.BindTerm($1, $3);
 } | decl_expr '::' or_expr {
   $$ = new ir.BindType($1, $3);
 } | decl_expr ':::' or_expr {
   $$ = new ir.BindKind($1, $3);
-} | decl_expr RARROW or_expr {
-  $$ = new ir.ArrowType($1, $3);
 } | or_expr {
   $$ = $1;
 };
 
 postfix_expr: postfix_expr '(' ')' {
-  $$ = new ir.Call($1, null);
+  $$ = new ir.Call($1, []);
 } | postfix_expr '(' exprs ')' {
   $$ = new ir.Call($1, $3);
 } | primary_expr {
@@ -287,7 +291,7 @@ primary_expr: IDENT {
 } | literal {
   $$ = $1; 
 } | '(' exprs ')' {
-  $$ = $1;
+  $$ = $2;
 } | '(' ')' {
   $$ = [];
 };
