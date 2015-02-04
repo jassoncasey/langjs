@@ -118,18 +118,18 @@ stmt: expr ';' {
       $$ = $1;
     };
 
-def: 'DEF' arrow_expr {
+def: 'DEF' bind {
   $$ = $2;
-} | 'DEF' arrow_expr '=' expr {
+} | 'DEF' bind '=' expr {
   $$ = new ir.Store($2, $4);
 };
 
 expr: lor_expr
     | assign
     | block
-    | while_expr
-    | if_expr
-    | return_expr;
+    | while_
+    | if_
+    | return_;
 
 exprs: exprs ',' expr {
   $1.push($3);
@@ -138,15 +138,15 @@ exprs: exprs ',' expr {
   $$ = [$1];
 };
 
-assign: arrow_expr '=' expr {
+assign: bind '=' expr {
   $$ = new ir.Store($1, $3);
 };
 
-while_expr: WHILE '(' expr ')' block {
+while_: WHILE '(' expr ')' block {
   $$ = new ir.While($3, $5);
 };
 
-if_expr: IF '(' expr ')' stmt {
+if_: IF '(' expr ')' stmt {
   $$ = new ir.Conditional($3, $5, null);
 } | IF '(' expr ')' stmt ELSE stmt {
   $$ = new ir.Conditional($3, $5, $7);
@@ -156,103 +156,103 @@ block: '{' stmts '}' {
   $$ = $2;
 };
 
-return_expr: RETURN expr {
+return_: RETURN expr {
   $$ = new ir.Return($2);
 };
 
-lor_expr: lor_expr IF land_expr {
+lor: lor IF land {
   $$ = new ir.Binary($2, $1, $3);
-} | lor_expr LOR land_expr {
+} | lor LOR land {
   $$ = new ir.Binary($2, $1, $3);
-} | land_expr {
+} | land {
   $$ = $1;
 };
 
-land_expr: land_expr LAND or_expr {
+land: land LAND or {
   $$ = new ir.Binary($2, $1, $3);
-} | or_expr {
+} | or {
   $$ = $1;
 };
 
-or_expr: or_expr '|' xor_expr {
+or: or '|' xor {
   $$ = new ir.Binary($2, $1, $3);     
-} | xor_expr {
+} | xor {
   $$ = $1;
 };
 
-xor_expr: xor_expr '^' and_expr {
+xor: xor '^' and {
   $$ = new ir.Binary($2, $1, $3);
-} | and_expr {
+} | and {
   $$ = $1;
 };
 
-and_expr: and_expr '&' eq_expr {
+and: and '&' eq {
   $$ = new ir.Binary($2, $1, $3);
-} | eq_expr {
+} | eq {
   $$ = $1;
 };
 
-eq_expr: EQ rel_expr {
+eq: EQ rel {
   $$ = new ir.Unary($1, $2);
-} | NEQ rel_expr {
+} | NEQ rel {
   $$ = new ir.Unary($1, $2);
-} | eq_expr EQ rel_expr {
+} | eq EQ rel {
   $$ = new ir.Binary($2, $1, $3);
-} | eq_expr NEQ rel_expr {
+} | eq NEQ rel {
   $$ = new ir.Binary($2, $1, $3);
-} | rel_expr {
+} | rel {
   $$ = $1;
 };
 
-rel_expr: '<' shift_expr {
+rel: '<' shift {
   $$ = new ir.Unary($1, $2);
-} | '>' shift_expr {
+} | '>' shift {
   $$ = new ir.Unary($1, $2);
-} | '<=' shift_expr {
+} | '<=' shift {
   $$ = new ir.Unary($1, $2);
-} | '>=' shift_expr {
+} | '>=' shift {
   $$ = new ir.Unary($1, $2);
-} | rel_expr '<' shift_expr {
+} | rel '<' shift {
   $$ = new ir.Binary($2, $1, $3);
-} | rel_expr '>' shift_expr {
+} | rel '>' shift {
   $$ = new ir.Binary($2, $1, $3);
-} | rel_expr '<=' shift_expr {
+} | rel '<=' shift {
   $$ = new ir.Binary($2, $1, $3);
-} | rel_expr '>=' shift_expr {
+} | rel '>=' shift {
   $$ = new ir.Binary($2, $1, $3);
-} | shift_expr {
+} | shift {
   $$ = $1;
 };
 
-shift_expr: shift_expr '<<' add_expr {
+shift: shift '<<' add {
   $$ = new ir.Binary($2, $1, $3);
-} | shift_expr '>>' add_expr {
+} | shift '>>' add {
   $$ = new ir.Binary($2, $1, $3);
-} | add_expr {
+} | add {
   $$ = $1;
 };
 
-add_expr: add_expr '+' mult_expr {
+add: add '+' mult {
   $$ = new ir.Binary($2, $1, $3);
-} | add_expr '-' mult_expr {
+} | add '-' mult {
   $$ = new ir.Binary($2, $1, $3);
-} | mult_expr {
+} | mult {
   $$ = $1;
 }; 
 
-mult_expr: mult_expr '*' unary_expr {
+mult: mult '*' unary {
   $$ = new ir.Binary($2, $1, $3);
-} | mult_expr '/' unary_expr {
+} | mult '/' unary {
   $$ = new ir.Binary($2, $1, $3);
-} | mult_expr '%' unary_expr {
+} | mult '%' unary {
   $$ = new ir.Binary($2, $1, $3);
-} | unary_expr {
+} | unary {
   $$ = $1;
 };
 
-unary_expr: unary_op unary_expr {
+unary: unary_op unary {
   $$ = new ir.Unary($1, $2);
-} | postfix_expr {
+} | postfix {
   $$ = $1;
 };
 
@@ -262,31 +262,31 @@ unary_op: '~' {
   $$ = $1;
 };
 
-arrow_expr: decl_expr RARROW arrow_expr {
+arrow: bind RARROW arrow {
   $$ = new ir.ArrowType($1, $3);
-} | decl_expr {
+} | bind {
   $$ = $1;
 };
 
-decl_expr: decl_expr ':' or_expr {
+bind: postfix ':' bind {
   $$ = new ir.BindTerm($1, $3);
-} | decl_expr '::' or_expr {
+} | postfix '::' bind {
   $$ = new ir.BindType($1, $3);
-} | decl_expr ':::' or_expr {
+} | postfix ':::' bind {
   $$ = new ir.BindKind($1, $3);
-} | or_expr {
+} | postfix {
   $$ = $1;
 };
 
-postfix_expr: postfix_expr '(' ')' {
+postfix: postfix '(' ')' {
   $$ = new ir.Call($1, []);
-} | postfix_expr '(' exprs ')' {
+} | postfix '(' exprs ')' {
   $$ = new ir.Call($1, $3);
-} | primary_expr {
+} | primary {
   $$ = $1;
 };
 
-primary_expr: IDENT {
+primary: IDENT {
   $$ = new ir.Variable(yytext);
 } | literal {
   $$ = $1; 
