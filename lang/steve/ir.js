@@ -148,6 +148,18 @@ Visitor.prototype.conditional = function(conditional) {
   }
 };
 
+function Block(body) {
+  this.body = body;
+}
+
+Block.prototype.accept = function(v) {
+  v.block(this);
+};
+
+Visitor.prototype.block = function(block) {
+  block.body.accept(this);
+};
+
 function While(pred, body) {
   this.pred = pred;
   this.body = body;
@@ -241,6 +253,7 @@ exports.BindType    = BindType;
 exports.BindKind    = BindKind;
 exports.Store       = Store;
 exports.Conditional = Conditional;
+exports.Block       = Block;
 exports.While       = While;
 exports.Return      = Return;
 exports.Unary       = Unary;

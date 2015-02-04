@@ -153,7 +153,7 @@ if_: IF '(' expr ')' stmt {
 };
 
 block: '{' stmts '}' {
-  $$ = $2;
+  $$ = new ir.Block($2);
 };
 
 return_: RETURN expr {

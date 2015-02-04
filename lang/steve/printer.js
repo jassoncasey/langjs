@@ -68,30 +68,30 @@ Visitor.prototype.store = function(ir) {
 
 Visitor.prototype.conditional = function(ir) {
   this.f.write('if(');
-  this.f.writeln(') {');
-  this.f.instab();
+  ir.pred.accept(this);
+  this.f.write(') ');
   ir.thenExpr.accept(ir);
-  this.f.rmtab();
-  this.f.write('}');
   if(ir.elseExpr) {
-    this.f.writeln(' else {');
-    this.f.instab();
+    this.f.writeln(' else ');
     ir.elseExpr.accept(ir);
-    this.f.rmtab();
-    this.f.writeln('}');
   } else {
     this.f.nl();
   }
 };
 
-Visitor.prototype.while_ = function(ir) {
-  this.f.write('while(');
-  ir.pred.accept(this);
-  this.f.writeln(') {');
+Visitor.prototype.block = function(ir) {
+  this.f.writeln('{');
   this.f.instab();
   ir.body.accept(this);
   this.f.rmtab();
   this.f.writeln('}');
+};
+
+Visitor.prototype.while_ = function(ir) {
+  this.f.write('while(');
+  ir.pred.accept(this);
+  this.f.writeln(') ');
+  ir.body.accept(this);
 };
 
 Visitor.prototype.return_ = function(ir) {
