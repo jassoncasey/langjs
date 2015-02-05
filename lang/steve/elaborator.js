@@ -34,6 +34,18 @@ Visitor.prototype.simpleType = function(ir) {
 Visitor.prototype.arrowType = function(ir) {
 };
 
+Visitor.prototype.bindTerm = function(ir) {
+};
+
+Visitor.prototype.bindType = function(ir) {
+};
+
+Visitor.prototype.bindKind = function(ir) {
+};
+
+Visitor.prototype.store = function(ir) {
+};
+
 Visitor.prototype.seq = function(ir) {
   _(ir.exprs).each(function(expr) {
     expr.accept(this);
@@ -56,7 +68,8 @@ function elaborate(ir) {
   return new Elaboration(v.expr, v.type);
 }
 
-exports.Visitor = Visitor;
+// Symbol exports ...
+exports.Visitor   = Visitor;
 exports.elaborate = elaborate;
 
 })();

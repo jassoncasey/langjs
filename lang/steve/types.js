@@ -23,6 +23,10 @@ SimpleType.prototype.equal = function(rhs) {
   return rhs instanceof SimpleType && this.name === rhs.name;
 };
 
+SimpleType.prototype.toString = function() {
+  return '(type ' + this.name + ')';
+};
+
 // Generic simpleType visitation
 var visitSimpleType = noop;
 
@@ -44,6 +48,10 @@ RefType.prototype.accept = function(v) {
 RefType.prototype.equal = function(rhs) {
   return rhs instanceof RefType &&
     equal(this.type, rhs.type);
+};
+
+RefType.prototype.toString = function() {
+  return '(ref ' + this.type.toString() + ')';
 };
 
 // Generic ref type visitor
@@ -75,6 +83,12 @@ ArrowType.prototype.equal = function(rhs) {
     }) && equal(this.retType, rhs.retType);
 };
 
+ArrowType.prototype.toString = function() {
+  return '(' + _(this.argTypes).map(function(argType) {
+    return argType.toString();
+  }).join(', ') + '->' + this.retType.toString() + ')';
+};
+
 // Generic arrow visitation
 function visitArrow(arrow) {
   _(arrow.argTypes).each(function(arg) {
@@ -88,6 +102,7 @@ function equal(lhs, rhs) {
   return lhs.equal(rhs);
 }
 
+// Symbol exports ...
 exports.SimpleType      = SimpleType;
 exports.visitSimpleType = visitSimpleType;
 exports.ArrowType       = ArrowType;

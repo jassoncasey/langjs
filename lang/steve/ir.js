@@ -7,8 +7,8 @@ var types = require('./types');
 
 function noop() {}
 
+// Generic ir visitor
 function Visitor() {}
-
 
 /*
  * Constant - constant/literal in the language
@@ -296,9 +296,9 @@ Visitor.prototype.binary = function(binary) {
 };
 
 /*
- * Func - function expression
+ * Func - function/abstraction expression
  *
- * Example: id(x: int) -> int = { return x; }
+ * Example: (x: int) -> int = { return x; }
  */
 function Func(arrow, body) {
   this.arrow = arrow;
@@ -338,6 +338,7 @@ Visitor.prototype.call = function(call) {
   }, this);
 };
 
+// Symbol exports ...
 exports.Constant    = Constant;
 exports.Variable    = Variable;
 exports.SimpleType  = SimpleType;
