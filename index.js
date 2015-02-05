@@ -16,14 +16,11 @@ pgm
   .usage('[options] <file ...>')
   .option('-l, --lang <lang>',     'Select a language')
   .option('-p, --plugin [plugin]', 'Select a sequence of plugins', plugins, [])
-  .option('--compile',         'compile the input program')
-  .option('--evaluate',        'evaluate the input program')
-  .option('-f, --source',      'display the source file contents')
-  .option('-s, --syntax',      'display the syntax parse tree')
-  .option('-t, --typing',      'display the elaboration tree')
-  .option('-e, --evaluation',  'display the evaluation tree')
-  .option('-c, --compilation', 'display the compilation tree')
-  .option('--list', 'List the installed languages and plugins')
+  .option('-c, --compile <lang>',  'compile the input program')
+  .option('-f, --source',          'display the source file contents')
+  .option('-s, --syntax',          'display the syntax parse tree')
+  .option('-t, --typing',          'display the elaboration tree')
+  .option('--list',                'List the installed languages and plugins')
   .description('A nodejs based Modulular language experimentation framework')
   .parse(process.argv);
 
@@ -35,12 +32,11 @@ if(!_(pgm.lang).isString()) {
   drv.drive({
     language: pgm.lang,
     plugins: pgm.plugin,
+    emitter: pgm.compile ? pgm.comile : null,
     display: {
-      source:      pgm.source      ? true : false,
-      syntax:      pgm.syntax      ? true : false,
-      typing:      pgm.typing      ? true : false,
-      evaluation:  pgm.evaluation  ? true : false,
-      compilation: pgm.compilation ? true : false
+      source: pgm.source ? true : false,
+      syntax: pgm.syntax ? true : false,
+      typing: pgm.typing ? true : false
     }
   }, pgm.args);
 }

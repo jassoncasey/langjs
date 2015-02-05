@@ -297,9 +297,9 @@ primary: IDENT {
 };
     
 literal: HEX {
-  $$ = new ir.Constant('nat', yytext);
+  $$ = new ir.Constant('nat', parseInt(yytext, 16));
 } | DIGITS {
-  $$ = new ir.Constant('nat', yytext);
+  $$ = new ir.Constant('nat', parseInt(yytext));
 } | CHAR {
   $$ = new ir.Constant('char', yytext);
 } | STRING {
