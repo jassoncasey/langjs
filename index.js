@@ -32,7 +32,7 @@ if(!_(pgm.lang).isString()) {
   drv.drive({
     language: pgm.lang,
     plugins: pgm.plugin,
-    emitter: pgm.compile ? pgm.comile : null,
+    emitter: pgm.compile ? pgm.compile : null,
     display: {
       source: pgm.source ? true : false,
       syntax: pgm.syntax ? true : false,
