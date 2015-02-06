@@ -59,6 +59,10 @@ function visitRefType(refType) {
   refType.type.accept(this);
 }
 
+function isRefType(type) {
+  return type instanceof RefType;
+}
+
 /*
  * ArrowType - function/abstraction type
  *
@@ -105,6 +109,9 @@ function equal(lhs, rhs) {
 // Symbol exports ...
 exports.SimpleType      = SimpleType;
 exports.visitSimpleType = visitSimpleType;
+exports.RefType         = RefType;
+exports.visitRefType    = visitRefType;
+exports.isRefType       = isRefType;
 exports.ArrowType       = ArrowType;
 exports.visitArrow      = visitArrow;
 exports.equal           = equal;
